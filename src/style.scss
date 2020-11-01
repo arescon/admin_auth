@@ -1,0 +1,16 @@
+body {
+  background-color: #4c4c4c;
+}
+// -------------------------- login form ------------------------------------------
+.login-form {
+	display: block;
+	position: relative;
+	max-width: 450px;
+	border-radius: 4px;
+	// box-shadow: 0 0 18px rgba(0, 0, 0, 0.2);
+	margin: 120px auto;
+}
+
+.login-reg.login-form{
+  width: 800px;
+}
