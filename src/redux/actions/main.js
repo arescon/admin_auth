@@ -10,11 +10,14 @@ export const setCurPage = (cur_page) => {
   }
 };
 
-export const setStatusAuth = (status) => {
+export const setStatusAuth = (status, user_data) => {
   return dispatch => {
     dispatch({
       type: SET_STATUS_AUTH,
-      payload: status || 0
+      payload: {
+        status: status || 0,
+        user_data: user_data
+      }
     })
   }
 };

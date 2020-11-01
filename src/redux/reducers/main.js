@@ -5,7 +5,8 @@ import {
 
 export const initStore = {
   cur_page: 0,
-  status_auth: 0
+  status_auth: 0,
+  user: {}
 };
 
 const handlers = (state = initStore, action) => {
@@ -14,7 +15,10 @@ const handlers = (state = initStore, action) => {
       return { ...state, cur_page: action.payload }
     }
     case SET_STATUS_AUTH: {
-      return { ...state, status_auth: action.payload }
+      return { ...state,
+        status_auth: action.payload.status,
+        user: action.payload.user_data
+      }
     }
     default:
       return state;

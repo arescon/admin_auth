@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import qs from 'query-string';
+
+import { Layout, Menu, Icon } from 'antd';
+const { Content, Footer, Sider } = Layout;
 
 import { setStatusAuth } from 'src/redux/actions/main';
 
 import Home from './home';
+
+import HeaderBlock from './header';
 
 import LoginForm from './login';
 
@@ -16,9 +21,9 @@ const App = ({ status_auth, setStatusAuth }) => {
   useEffect(() => {
     if(status_auth !== 2 ) {
       Get('/auth/checkout').then( result => {
-        setStatusAuth(status_auth !== 2 ? 2 : 1)
+        setStatusAuth(2, result.data.data);
       }).catch( error => {
-        setStatusAuth(1);
+        setStatusAuth(1, {});
       })
     }
   }, [status_auth])
@@ -28,9 +33,34 @@ const App = ({ status_auth, setStatusAuth }) => {
       return <LoginForm />
       break;
     case 2:
-      return <Switch>
-        <Route path="/" component={Home} exact />
-      </Switch>
+      return <Layout>
+          <Sider
+            style={{
+              overflow: 'auto',
+              height: '100vh',
+              position: 'fixed',
+              left: 0,
+            }}
+          > 
+            <Menu
+              mode="inline"
+              theme="dark"
+            >
+              <Menu.Item>
+                Главная
+              </Menu.Item>
+            </Menu>
+          </Sider>
+          <Layout style={{ marginLeft: 200 }}>
+            <HeaderBlock />
+            <Content className='content-portal-admin'>
+              <Switch>
+                <Route path='/' component={Home} exact />
+                <Redirect to='/' />
+              </Switch>
+            </Content>
+          </Layout>
+        </Layout>
       break;
     default:
       return <>Loading</>;

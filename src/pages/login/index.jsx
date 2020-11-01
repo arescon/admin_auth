@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Layout, Card, Form, Input, Button, Checkbox, Typography } from 'antd';
+import { Row, Col, Layout, Card, Alert,
+    Form, Input, Button, Checkbox, Typography
+} from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -11,20 +13,22 @@ import { setCurPage } from 'src/redux/actions/main';
 
 import { Post } from 'src/libs/api';
 
-const LoginForm = () => {
+import { setStatusAuth } from 'src/redux/actions/main';
+
+const LoginForm = ({ setStatusAuth }) => {
+  const [errors, setErrors] = useState(false);
 
   const handleSubmit = (values) => {
     // http://localhost:3000/auth/login
-    console.log(values)
     Post('/auth/login', values).then(result => {
-      console.log(result);
+      setStatusAuth(2, result.data.data);
     }).catch(error => {
-      console.log(error)
+      setErrors(true);
     })
   };
 
   const handleChange = (changedValues, allValues) => {
-    // console.log(changedValues, allValues)
+    setErrors(errors && false);
   };
 
   return <div className='login-form'>
@@ -121,6 +125,13 @@ const LoginForm = () => {
       </Card>
     </Col>
   </Row>
+  { errors ? <Row gutter={4} style={{ marginTop: '3px' }}>
+    <Col span={24}>
+      <Card>
+        <Alert showIcon message="Неправильная пара логин/пароль" type="error" />
+      </Card>
+    </Col>
+  </Row> : null }
 </div>
 };
 
@@ -130,7 +141,7 @@ const mapStateToProps = (state /*, ownProps*/) => {
   }
 };
 
-const mapDispatchToProps = { setCurPage };
+const mapDispatchToProps = { setStatusAuth }
 
 export default connect(
   mapStateToProps,
