@@ -6,15 +6,15 @@ import qs from 'query-string';
 import { Layout, Menu, Icon } from 'antd';
 const { Content, Footer, Sider } = Layout;
 
+import { Get } from 'src/libs/api';
 import { setStatusAuth } from 'src/redux/actions/main';
-
-import Home from './home';
 
 import HeaderBlock from './header';
 
 import LoginForm from './login';
 
-import { Get } from 'src/libs/api';
+import MenuPage from './admin/menu';
+import Home from './home';
 
 const App = ({ status_auth, setStatusAuth }) => {
 
@@ -49,6 +49,9 @@ const App = ({ status_auth, setStatusAuth }) => {
               <Menu.Item>
                 Главная
               </Menu.Item>
+              <Menu.Item>
+                <Link to='/menu'>Настройка меню</Link>
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout style={{ marginLeft: 200 }}>
@@ -56,6 +59,8 @@ const App = ({ status_auth, setStatusAuth }) => {
             <Content className='content-portal-admin'>
               <Switch>
                 <Route path='/' component={Home} exact />
+                {/* admin routes */}
+                <Route path='/menu' component={MenuPage} exact />
                 <Redirect to='/' />
               </Switch>
             </Content>

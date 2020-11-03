@@ -18,7 +18,8 @@ const HeaderBlock = ({ user, setStatusAuth }) => {
   return <PageHeader style={{
       padding: '0px 10px 7px 0px',
       height: 'auto',
-      borderBottom: '4px solid rgb(76 76 76)'
+      borderBottom: '4px solid rgb(76 76 76)',
+      background: 'white'
     }}
     extra={[
       <span style={{
