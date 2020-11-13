@@ -1,12 +1,14 @@
 import {
   SET_CUR_PAGE,
   SET_STATUS_AUTH,
+  SET_MENU_USER
 } from '../actions/main';
 
 export const initStore = {
   cur_page: 0,
   status_auth: 0,
-  user: {}
+  user: {},
+  root_menu: []
 };
 
 const handlers = (state = initStore, action) => {
@@ -18,6 +20,11 @@ const handlers = (state = initStore, action) => {
       return { ...state,
         status_auth: action.payload.status,
         user: action.payload.user_data
+      }
+    }
+    case SET_MENU_USER: {
+      return { ...state,
+        root_menu: action.payload
       }
     }
     default:

@@ -32,3 +32,37 @@ body {
 .new-btn-pages {
 	margin-bottom: 15px;
 }
+
+.spin-loader-modal {
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	position: absolute;
+	background: #000c1757;
+	margin-top: -24px;
+	margin-left: -24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.ant-table-row-level-0 {
+	background: white !important;
+}
+
+[class*=ant-table-row-level-] {
+	background: #9caebf57;
+}
+
+.row-dragging {
+  background: #fafafa;
+  border: 1px solid #ccc;
+}
+
+.row-dragging td {
+  padding: 16px;
+  visibility: hidden;
+}
+
+.row-dragging .drag-visible {
+  visibility: visible;
+}

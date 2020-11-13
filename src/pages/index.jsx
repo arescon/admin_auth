@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import qs from 'query-string';
+import _ from 'lodash';
 
 import { Layout, Menu, Icon } from 'antd';
 const { Content, Footer, Sider } = Layout;
+const { SubMenu } = Menu;
 
 import { Get } from 'src/libs/api';
-import { setStatusAuth } from 'src/redux/actions/main';
+import { setStatusAuth, setMenuUser } from 'src/redux/actions/main';
 
 import HeaderBlock from './header';
 
@@ -16,7 +18,10 @@ import LoginForm from './login';
 import MenuPage from './admin/menu';
 import Home from './home';
 
-const App = ({ status_auth, setStatusAuth }) => {
+const App = ({
+  status_auth, root_menu,
+  setStatusAuth, setMenuUser
+}) => {
 
   useEffect(() => {
     if(status_auth !== 2 ) {
@@ -27,6 +32,17 @@ const App = ({ status_auth, setStatusAuth }) => {
       })
     }
   }, [status_auth])
+
+  useEffect(() => {
+    if(_.isEmpty(root_menu)) {
+      console.log('tut')
+      Get('/menu-items', {
+        menu: 'osnovnoe_menu_adminki'
+      }).then( result => {
+        setMenuUser(result.data.data);
+      });
+    }
+  }, [root_menu])
 
   switch (status_auth) {
     case 1:
@@ -47,11 +63,30 @@ const App = ({ status_auth, setStatusAuth }) => {
               theme="dark"
             >
               <Menu.Item>
-                Главная
+                <Link to='/'>Главная</Link>
               </Menu.Item>
-              <Menu.Item>
-                <Link to='/menu'>Настройка меню</Link>
-              </Menu.Item>
+              {
+                (() => {
+                  function renderMenu(parent, separator) {
+                    return root_menu.filter(fe => fe.parent === parent).map((el_menu, i_item) => {
+                      let child = root_menu.filter(fe => fe.parent === el_menu.id);
+                      if(_.isEmpty(child)) {
+                        return <Menu.Item key={i_item+separator}>
+                            <Link to={'/' + el_menu.url}>{el_menu.title}</Link>
+                          </Menu.Item>
+                      } else {
+                        return <SubMenu
+                            key={i_item+separator}
+                            title={el_menu.title}
+                          >
+                            {renderMenu(el_menu.id, separator + '-' )}
+                          </SubMenu>
+                      }
+                    })
+                  };
+                  return renderMenu(0, '-');
+                })()
+              }
             </Menu>
           </Sider>
           <Layout style={{ marginLeft: 200 }}>
@@ -75,11 +110,12 @@ const App = ({ status_auth, setStatusAuth }) => {
 
 const mapStateToProps = (state /*, ownProps*/) => {
   return {
-    status_auth: state.main.status_auth
+    status_auth: state.main.status_auth,
+    root_menu: state.main.root_menu
   }
 }
 
-const mapDispatchToProps = { setStatusAuth }
+const mapDispatchToProps = { setStatusAuth, setMenuUser }
 
 export default connect(
   mapStateToProps,
